@@ -21,7 +21,7 @@
                     </div>
                     <div class="form-group">
                         <label>Wallet</label>
-                        <input type="text" name="wallet" id="modal_user_wallet" class="form-control">
+                        <input type="text" name="wallet" id="modal_user_wallet" class="form-control" hidden>
                     </div>
                     <div class="form-group">
                         <label>User Status</label>
