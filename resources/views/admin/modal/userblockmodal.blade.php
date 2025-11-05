@@ -19,9 +19,9 @@
                         <label>Email</label>
                         <input type="text" name="email" id="modal_user_email" class="form-control" readonly>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" hidden>
                         <label>Wallet</label>
-                        <input type="text" name="wallet" id="modal_user_wallet" class="form-control" hidden>
+                        <input type="text" name="wallet" id="modal_user_wallet" class="form-control" >
                     </div>
                     <div class="form-group">
                         <label>User Status</label>
