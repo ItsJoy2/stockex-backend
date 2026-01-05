@@ -14,23 +14,83 @@ use Illuminate\Support\Facades\Validator;
 
 class UserService
 {
+    // public function UserProfile(Request $request): JsonResponse
+    // {
+    //     $user = $request->user();
+
+    //     $teamInvest = (float) $user->totalTeamInvestment();
+    //     $directRefer = $user->referrals()->count();
+    //     $totalTeam = $user->totalTeamMembersCount();
+    //     $roi = (float) Transactions::where('user_id', $user->id)->where('remark','interest')->sum('amount') ?? '0';
+    //     $totalInvestment = (float) Investor::where('user_id', $user->id)->sum('investment') ?? '0';
+    //     $totalWithdraw = (float) Transactions::where('user_id', $user->id)->where('remark','withdrawal')->sum('amount');
+    //     $totalTransfer = (float) Transactions::where('user_id', $user->id)->where('remark','transfer')->sum('amount');
+    //      $totalDeposit = (float) Transactions::where('user_id', $user->id)
+    //         ->where('remark', 'deposit')
+    //         ->whereIn('status', ['Completed', 'Paid'])
+    //         ->sum('amount');
+    //     $totalEarning = (float) Transactions::where('user_id', $user->id)->whereIn('remark', ['referral_commission', 'interest'])->sum('amount');
+    //     $totalReferBonus = (float) Transactions::where('user_id', $user->id)->where('remark','referral_commission')->sum('amount');
+
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'User Profile Retrieved Successfully',
+    //         'data' => [
+    //             'user' => [
+    //                 'id' => $user->id,
+    //                 'name' => $user->name,
+    //                'image' => $user->image ? url(Storage::url($user->image)) : null,
+    //                 'birthday' => $user->birthday,
+    //                 'nid_or_passport' => $user->nid_or_passport,
+    //                 'address' => $user->address,
+    //                 'email' => $user->email,
+    //                 'mobile' => $user->mobile,
+    //                 'refer_code' => $user->refer_code,
+    //                 'refer_by' => $user->refer_by,
+    //                 'is_active' => $user->is_active,
+    //                 'is_block' => $user->is_block,
+    //                 'kyc_status' => $user->kyc_status,
+    //                 'created_at' => $user->created_at,
+    //                 'updated_at' => $user->updated_at,
+    //             ],
+    //             'wallet' => $user->wallet,
+    //             'profit_wallet' => $user->profit_wallet,
+    //             'teamInvest' => $teamInvest,
+    //             'directRefer' => $directRefer,
+    //             'totalTeam' => $totalTeam,
+    //             'roi' => $roi,
+    //             'totalInvestment' => $totalInvestment,
+    //             'totalWithdraw' => $totalWithdraw,
+    //             'totalTransfer' => $totalTransfer,
+    //             'totalDeposit' => $totalDeposit,
+    //             'totalEarning' => $totalEarning,
+    //             'totalReferBonus' => $totalReferBonus,
+    //         ]
+    //     ]);
+    // }
+
+
     public function UserProfile(Request $request): JsonResponse
     {
         $user = $request->user();
 
-        $teamInvest = (float) $user->totalTeamInvestment();
+        $teamInvest = number_format((float) $user->totalTeamInvestment(), 2, '.', '');
         $directRefer = $user->referrals()->count();
         $totalTeam = $user->totalTeamMembersCount();
-        $roi = (float) Transactions::where('user_id', $user->id)->where('remark','interest')->sum('amount') ?? '0';
-        $totalInvestment = (float) Investor::where('user_id', $user->id)->sum('investment') ?? '0';
-        $totalWithdraw = (float) Transactions::where('user_id', $user->id)->where('remark','withdrawal')->sum('amount');
-        $totalTransfer = (float) Transactions::where('user_id', $user->id)->where('remark','transfer')->sum('amount');
-         $totalDeposit = (float) Transactions::where('user_id', $user->id)
-            ->where('remark', 'deposit')
-            ->whereIn('status', ['Completed', 'Paid'])
-            ->sum('amount');
-        $totalEarning = (float) Transactions::where('user_id', $user->id)->whereIn('remark', ['referral_commission', 'interest'])->sum('amount');
-        $totalReferBonus = (float) Transactions::where('user_id', $user->id)->where('remark','referral_commission')->sum('amount');
+
+        $roi = number_format(Transactions::where('user_id', $user->id)->where('remark', 'interest')->sum('amount'),  2,'.', '' );
+
+        $totalInvestment = number_format(Investor::where('user_id', $user->id)->sum('investment'),2,'.','');
+
+        $totalWithdraw = number_format(Transactions::where('user_id', $user->id)->where('remark', 'withdrawal')->sum('amount'),2,'.','');
+
+        $totalTransfer = number_format( Transactions::where('user_id', $user->id)->where('remark', 'transfer')->sum('amount'),2,'.','');
+
+        $totalDeposit = number_format(Transactions::where('user_id', $user->id)->where('remark', 'deposit')->whereIn('status', ['Completed', 'Paid'])->sum('amount'),2,'.', '');
+
+        $totalEarning = number_format(Transactions::where('user_id', $user->id)->whereIn('remark', ['referral_commission', 'interest'])->sum('amount'),2,'.','');
+
+        $totalReferBonus = number_format(Transactions::where('user_id', $user->id)->where('remark', 'referral_commission')->sum('amount'),2,'.', '' );
 
         return response()->json([
             'status' => true,
@@ -39,7 +99,7 @@ class UserService
                 'user' => [
                     'id' => $user->id,
                     'name' => $user->name,
-                   'image' => $user->image ? url(Storage::url($user->image)) : null,
+                    'image' => $user->image ? url(Storage::url($user->image)) : null,
                     'birthday' => $user->birthday,
                     'nid_or_passport' => $user->nid_or_passport,
                     'address' => $user->address,
@@ -53,8 +113,8 @@ class UserService
                     'created_at' => $user->created_at,
                     'updated_at' => $user->updated_at,
                 ],
-                'wallet' => $user->wallet,
-                'profit_wallet' => $user->profit_wallet,
+                'wallet' => number_format((float) $user->wallet, 2, '.', ''),
+                'profit_wallet' => number_format((float) $user->profit_wallet, 2, '.', ''),
                 'teamInvest' => $teamInvest,
                 'directRefer' => $directRefer,
                 'totalTeam' => $totalTeam,
