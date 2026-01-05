@@ -49,7 +49,7 @@ return new class extends Migration
 
        DB::table('users')->insert([
            'name' => 'admin',
-           'email' => 'admin@petroxcin.com',
+           'email' => 'admin@stockex.com',
            'mobile' => '0123456789',
            'password' => Hash::make('112233'),
            'role' => 'admin',
