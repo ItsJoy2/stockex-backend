@@ -58,6 +58,13 @@ class CronController extends Controller
                     continue;
                 }
 
+                if (!$user->is_active || $user->is_block) {
+                    $investor->update([
+                        'next_cron' => Carbon::parse($investor->next_cron)->addDay()
+                    ]);
+                    continue;
+                }
+
                 $percentageAmount = ($investor->investment * $package->interest_rate) / 100;
 
                 $user->increment('profit_wallet', $percentageAmount);
@@ -84,7 +91,6 @@ class CronController extends Controller
 
         return $holiday ? 'Holiday Found: Only next_cron Updated' : 'Cron Job Executed Successfully';
     }
-
 
     private function addReferralBonus(User $referrer, $baseAmount): void
     {
