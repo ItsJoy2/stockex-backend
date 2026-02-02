@@ -59,13 +59,13 @@ class DepositController extends Controller
         $status = $request->input('status');
         $depositData = Transactions::findOrFail($id);
 
-        if($status == 'completed'){
+        if ($status === 'completed') {
             $user = User::findOrFail($depositData->user_id);
 
             $user->wallet += $depositData->amount;
 
             $bonusSetting = DepositSetting::where('status', 1)->first();
-            if($bonusSetting){
+            if ($bonusSetting) {
                 $bonusAmount = ($depositData->amount * $bonusSetting->bonus_percentage) / 100;
                 $user->wallet += $bonusAmount;
 
@@ -74,24 +74,28 @@ class DepositController extends Controller
                     'amount' => $bonusAmount,
                     'remark' => 'deposit',
                     'type' => '+',
-                    'details' => 'Deposit Bonus for TXN: '.$depositData->details,
-                    'transaction_id' => 'BONUS-'.$depositData->transaction_id,
+                    'details' => 'Deposit Bonus for TXN: ' . $depositData->details,
+                    'transaction_id' => 'BONUS-' . $depositData->transaction_id,
                     'status' => 'Completed'
                 ]);
             }
 
             $user->save();
-
             $depositData->status = 'Completed';
             $depositData->save();
 
             cache()->flush();
+
             return back()->with('success', 'Deposit approved successfully');
         }
 
+        // reject / other status
         $depositData->status = $status;
         $depositData->save();
+
+        return back()->with('success', 'Deposit rejected successfully');
     }
+
 
 
     /**
