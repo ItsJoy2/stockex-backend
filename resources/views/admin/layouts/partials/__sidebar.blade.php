@@ -153,6 +153,7 @@
                         <ul class="nav nav-collapse">
                             <li><a href="/holidays"><span class="sub-item {{ Str::contains(request()->path(), 'holidays') ? 'active' : '' }}">Holidays Setting</span></a></li>
                             <li><a href="/withdraws/settings"><span class="sub-item">Withdraws Settings</span></a></li>
+                            <li><a href="{{ route('deposit.settings') }}"><span class="sub-item {{ Str::contains(request()->path(), 'deposit.settings') ? 'active' : '' }}">Deposit Bonus Settings</span></a></li>
                             <li><a href="/ReferralsSettings"><span class="sub-item">Referral Settings</span></a></li>
                             <li><a href="/general-settings"><span class="sub-item">General Settings</span></a></li>
                         </ul>

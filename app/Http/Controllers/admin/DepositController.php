@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\Transactions;
 use App\Models\User;
+use App\Models\Transactions;
 use Illuminate\Http\Request;
+use App\Models\DepositSetting;
+use App\Http\Controllers\Controller;
 
 class DepositController extends Controller
 {
@@ -14,7 +15,7 @@ class DepositController extends Controller
      */
     public function index()
     {
-        $deposits = Transactions::where('remark','=','deposit')->paginate(10);
+        $deposits = Transactions::where('remark','=','deposit')->orderBy('created_at', 'desc')->paginate(10);
         return view('admin.pages.deposit.index', compact('deposits'));
     }
 
@@ -56,21 +57,42 @@ class DepositController extends Controller
     public function update(Request $request, string $id)
     {
         $status = $request->input('status');
-        $depositData = Transactions::where('id', $id)->first();
+        $depositData = Transactions::findOrFail($id);
+
         if($status == 'completed'){
-            $user = User::where('id', $depositData->user_id)->first();
-            $user->wallet = $user->wallet + $depositData->amount;
+            $user = User::findOrFail($depositData->user_id);
+
+            $user->wallet += $depositData->amount;
+
+            $bonusSetting = DepositSetting::where('status', 1)->first();
+            if($bonusSetting){
+                $bonusAmount = ($depositData->amount * $bonusSetting->bonus_percentage) / 100;
+                $user->wallet += $bonusAmount;
+
+                Transactions::create([
+                    'user_id' => $user->id,
+                    'amount' => $bonusAmount,
+                    'remark' => 'deposit',
+                    'type' => '+',
+                    'details' => 'Deposit Bonus for TXN: '.$depositData->details,
+                    'transaction_id' => 'BONUS-'.$depositData->transaction_id,
+                    'status' => 'Completed'
+                ]);
+            }
+
             $user->save();
+
             $depositData->status = 'Completed';
             $depositData->save();
+
             cache()->flush();
-            return back()->with('success', 'Updated Successfully');
+            return back()->with('success', 'Deposit approved successfully');
         }
 
         $depositData->status = $status;
         $depositData->save();
-
     }
+
 
     /**
      * Remove the specified resource from storage.

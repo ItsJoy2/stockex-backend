@@ -89,6 +89,10 @@
                                     <div class="modal-body">
                                         <input type="hidden" name="id" value="{{ $deposit->id }}">
                                         <div class="form-group">
+                                            <label>Amount</label>
+                                            <input type="text" class="form-control" value="$ {{ $deposit->amount }}" readonly>
+                                        </div>
+                                        <div class="form-group">
                                             <label>Transaction ID</label>
                                             <input type="text" class="form-control" value="{{ $deposit->details }}" readonly>
                                         </div>

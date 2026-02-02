@@ -7,12 +7,13 @@ use App\Http\Controllers\api\UserController;
 use App\Http\Controllers\admin\KycController;
 use App\Http\Controllers\admin\PlansController;
 use App\Http\Controllers\admin\UsersController;
+use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\DepositController;
 use App\Http\Controllers\admin\WithdrawController;
 use App\Http\Controllers\admin\AdminTicketController;
 use App\Http\Controllers\admin\TransactionsController;
 use App\Http\Controllers\admin\AdminDashboardController;
-use App\Http\Controllers\admin\BannerController;
+use App\Http\Controllers\admin\DepositSettingController;
 use App\Http\Controllers\admin\GeneralSettingsController;
 use App\Http\Controllers\admin\WithdrawSettingsController;
 use App\Http\Controllers\admin\ReferralsSettingsController;
@@ -44,6 +45,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/withdraws/settings', [WithdrawSettingsController::class, 'index'])->name('withdraw.settings');
     Route::post('/withdraws/settings', [WithdrawSettingsController::class, 'update'])->name('admin.withdraw.settings.update');
 
+    Route::get('/deposit/settings', [DepositSettingController::class, 'index'])->name('deposit.settings');
+    Route::post('/deposit/settings', [DepositSettingController::class, 'update'])->name('admin.deposit.settings.update');
 
     Route::get('ReferralsSettings',[ReferralsSettingsController::class,'index'])->name('ReferralsSettings');
     Route::post('ReferralsSettings',[ReferralsSettingsController::class,'update'])->name('admin.referral.settings.update');
