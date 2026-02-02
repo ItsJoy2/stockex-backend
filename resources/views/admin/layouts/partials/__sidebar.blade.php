@@ -96,7 +96,7 @@
                         <p>Investment History</p>
                     </a>
                 </li>
-                
+
                 <!-- KYC -->
                 @php
                     use App\Models\kyc;
@@ -118,7 +118,13 @@
                     </a>
                 </li>
 
-
+                <!-- Banners -->
+                <li class="nav-item {{ request()->is('banners*') ? 'active' : '' }}">
+                    <a href="{{ route('banners.index') }}">
+                        <i class="fas fa-image"></i>
+                        <p>Banners</p>
+                    </a>
+                </li>
 
                 <!-- Cron -->
                 <li class="nav-item {{ request()->is('cron') ? 'active' : '' }}">

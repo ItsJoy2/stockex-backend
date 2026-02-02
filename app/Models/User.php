@@ -86,10 +86,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
 
 
-    public function investor()
+    public function investors(): HasMany
     {
-        return $this->hasOne(Investor::class, 'user_id');
+        return $this->hasMany(Investor::class, 'user_id');
     }
+
 
     public function totalTeamInvestment(int $maxLevel = 3, int $currentLevel = 1): float
     {
@@ -99,12 +100,16 @@ class User extends Authenticatable implements MustVerifyEmail
 
         $total = 0;
 
-        // get direct referrals
-        $referrals = $this->referrals()->with('investor')->get();
+        $referrals = $this->referrals()->with('investors')->get();
 
         foreach ($referrals as $referral) {
-            $investment = $referral->investor ? $referral->investor->investment : 0;
+
+            // 🔥 sum of all investments of this referral
+            $investment = $referral->investors->sum('investment');
+
             $total += $investment;
+
+            // recursive team investment
             $total += $referral->totalTeamInvestment($maxLevel, $currentLevel + 1);
         }
 

@@ -12,6 +12,7 @@ use App\Http\Controllers\admin\WithdrawController;
 use App\Http\Controllers\admin\AdminTicketController;
 use App\Http\Controllers\admin\TransactionsController;
 use App\Http\Controllers\admin\AdminDashboardController;
+use App\Http\Controllers\admin\BannerController;
 use App\Http\Controllers\admin\GeneralSettingsController;
 use App\Http\Controllers\admin\WithdrawSettingsController;
 use App\Http\Controllers\admin\ReferralsSettingsController;
@@ -28,6 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('users', [UsersController::class, 'index'])->name('users.index');
     Route::post('users/update', [UsersController::class, 'update'])->name('users.update');
     Route::resource('all-plan', PlansController::class);
+    Route::resource('banners', BannerController::class);
     Route::resource('withdraw', WithdrawController::class);
     Route::resource('transactions', TransactionsController::class);
     Route::resource('kyc', KycController::class);
@@ -62,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::post('general-settings', [GeneralSettingsController::class, 'update'])->name('admin.general.settings.update');
 
 
-        Route::get('/investments', [UsersController::class, 'investmentHistory'])->name('admin.investments');
+    Route::get('/investments', [UsersController::class, 'investmentHistory'])->name('admin.investments');
 
 });
 

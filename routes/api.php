@@ -7,6 +7,7 @@ use App\Http\Controllers\CronController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\api\AuthController;
 use App\Http\Controllers\api\UserController;
+use App\Http\Controllers\api\BannerController;
 use App\Http\Controllers\api\TicketController;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use App\Http\Controllers\api\ConvertController;
@@ -30,6 +31,7 @@ Route::prefix('user')->middleware(['auth:sanctum','verified'])->group(function (
     Route::post('transfer', [TransactionsController::class, 'transfer']);
     Route::post('withdraw', [TransactionsController::class, 'withdraw']);
     Route::post('convert', [ConvertController::class, 'convert']);
+    Route::get('banners', [BannerController::class, 'index']);
 
     // support Message
     Route::get('/tickets', [TicketController::class, 'index']);
